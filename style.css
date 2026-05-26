@@ -83,16 +83,15 @@ body:hover .custom-cursor.gede {
     font-weight: 300;
 }
 
-/* --- AREA TOMBOL (Supaya NO bisa bebas bergerak) --- */
+/* --- AREA TOMBOL --- */
 .button-wrapper {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 20px;
-    position: relative; /* Penting agar NO bisa absolute di dalamnya */
-    height: 100px; /* Tinggi area khusus tombol */
+    gap: 30px;
+    position: relative;
+    min-height: 100px;
     margin: 0 auto;
-    max-width: 400px;
 }
 
 .btn {
@@ -102,10 +101,13 @@ body:hover .custom-cursor.gede {
     font-weight: 800;
     border: none;
     border-radius: 50px;
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     outline: none;
-    text-decoration: none; /* Untuk link tag */
+    text-decoration: none;
     display: inline-block;
+    min-width: 120px;
+    /* AWALAN: state normal */
+    position: relative; 
+    transform: translate(0, 0);
 }
 
 /* YES BUTTON */
@@ -113,6 +115,7 @@ body:hover .custom-cursor.gede {
     background-color: #000000;
     color: white;
     box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
     z-index: 5;
 }
 
@@ -121,13 +124,12 @@ body:hover .custom-cursor.gede {
     background-color: #333;
 }
 
-/* NO BUTTON (BISA BERGERAK) */
+/* NO BUTTON */
 .no-btn {
     background-color: white;
     color: var(--text-dark);
     box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    position: absolute; /* Biar bisa bergerak bebas */
-    transition: top 0.4s ease, left 0.4s ease; /* Animasi perpindahan halus */
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     z-index: 4;
 }
 
@@ -154,6 +156,5 @@ body:hover .custom-cursor.gede {
 /* --- RESPONSIVE --- */
 @media (max-width: 600px) {
     .question-text { font-size: 2rem; }
-    .button-wrapper { flex-direction: column; height: auto; gap: 30px; }
-    .no-btn { position: static; } /* Di HP, NO tidak perlu kabur karena ribiet */
+    .button-wrapper { flex-direction: column; gap: 20px; }
 }
