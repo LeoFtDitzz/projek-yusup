@@ -1,118 +1,160 @@
-document.addEventListener('DOMContentLoaded', () => {
-    
-    // --- 1. CUSTOM CURSOR ---
-    const cursor = document.getElementById('cursor');
-    
-    document.addEventListener('mousemove', (e) => {
-        cursor.style.left = e.clientX + 'px';
-        cursor.style.top = e.clientY + 'px';
-    });
+/* --- VARIABEL --- */
+:root {
+    --bg-pastel: #ffe2e6;
+    --bg-dewasa: #ffb6c1;
+    --text-dark: #2c2c2c;
+}
 
-    // Efek cursor membesar saat hover tombol
-    const buttons = document.querySelectorAll('.btn');
-    buttons.forEach(btn => {
-        btn.addEventListener('mouseenter', () => cursor.classList.add('gede'));
-        btn.addEventListener('mouseleave', () => cursor.classList.remove('gede'));
-    });
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    cursor: none;
+}
 
+body {
+    font-family: 'Poppins', sans-serif;
+    background: radial-gradient(circle at center, var(--bg-dewasa), var(--bg-pastel));
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+}
 
-    // --- 2. FLOATTING HEARTS (BACKGROUND) ---
-    const bgContainer = document.getElementById('floating-hearts-bg');
-    
-    function createHeart() {
-        const heart = document.createElement('div');
-        heart.classList.add('bg-heart');
-        heart.innerHTML = '❤️';
-        
-        // Posisi acak horizontal
-        heart.style.left = Math.random() * 100 + 'vw';
-        
-        // Ukuran acak
-        const size = Math.random() * 20 + 10 + 'px';
-        heart.style.fontSize = size;
-        
-        // Kecepatan acak
-        const duration = Math.random() * 3 + 2 + 's';
-        heart.style.animationDuration = duration;
-        
-        bgContainer.appendChild(heart);
-        
-        // Hapus setelah animasi selesai
-        setTimeout(() => {
-            heart.remove();
-        }, 5000);
-    }
+/* --- CUSTOM CURSOR --- */
+.custom-cursor {
+    width: 20px;
+    height: 20px;
+    background-color: #ff4081;
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: width 0.2s, height 0.2s;
+    mix-blend-mode: multiply;
+}
 
-    // Buat hati setiap 300ms
-    setInterval(createHeart, 300);
+body:hover .custom-cursor.gede {
+    width: 60px;
+    height: 60px;
+    background-color: #ff4081;
+    opacity: 0.3;
+}
 
+/* --- LAYOUT --- */
+.container {
+    text-align: center;
+    z-index: 10;
+    padding: 20px;
+    max-width: 600px;
+    width: 100%;
+}
 
-    // --- 3. LOGIKA TOMBOL NO KABUR (KETIKA CURSOR MENDEKAT) ---
-    const noBtn = document.getElementById('no-btn');
-    const wrapper = document.getElementById('btn-wrapper');
-    const yesBtn = document.getElementById('yes-btn');
+/* Badge */
+.badge {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.6);
+    padding: 8px 20px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #555;
+    letter-spacing: 2px;
+    margin-bottom: 30px;
+    backdrop-filter: blur(5px);
+}
 
-    // Fungsi untuk menggerakkan NO ke posisi acak
-    function moveNoButton() {
-        // Ambil ukuran area wrapper
-        const wrapperRect = wrapper.getBoundingClientRect();
-        
-        // Hitung posisi acak внутри wrapper (dengan batas margins)
-        // Kita buat area sedikit lebih kecil agar tidak keluar batas
-        const maxX = wrapperRect.width - 120; // lebar tombol kurang lebih
-        const maxY = 80; // tinggi tombol kurang lebih
-        
-        const randomX = Math.floor(Math.random() * maxX) - (maxX/2);
-        const randomY = Math.floor(Math.random() * maxY) - (maxY/2);
-        
-        // Terapkan perpindahan menggunakan transform translate
-        // Ini lebih stabil daripada mengubah top/left langsung
-        noBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
-        
-        // Ubah teks tombol sekalian (opsional, lucu aja)
-        const responses = ["Yakin?", "Jangan deh", "Berani klik!", "Stay there", "Nice try"];
-        noBtn.innerText = responses[Math.floor(Math.random() * responses.length)];
-    }
+/* Teks */
+.question-text {
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--text-dark);
+    margin-bottom: 10px;
+    line-height: 1.2;
+}
 
-    // Deteksi mouse mendekat ke tombol NO
-    noBtn.addEventListener('mouseenter', () => {
-        moveNoButton();
-    });
+.sub-text {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 50px;
+    font-weight: 300;
+}
 
-    // Juga kalau mouse bergerak cepat di dalam area button-wrapper
-    // Kita cek secara periodik posisi mouse VS posisi NO
-    document.addEventListener('mousemove', (e) => {
-        const noRect = noBtn.getBoundingClientRect();
-        const distThreshold = 100; // Jarak Pixel untuk deteksi "mendekat"
-        
-        // Posisi mouse saat ini
-        const mouseX = e.clientX;
-        const mouseY = e.clientY;
-        
-        // Pusat tombol NO
-        const noCenterX = noRect.left + noRect.width / 2;
-        const noCenterY = noRect.top + noRect.height / 2;
-        
-        // Hitung jarak Euclidean
-        const distance = Math.sqrt(
-            Math.pow(mouseX - noCenterX, 2) + 
-            Math.pow(mouseY - noCenterY, 2)
-        );
-        
-        // Kalau jarak kurang dari 100px, tombol kabur!
-        if (distance < distThreshold) {
-            moveNoButton();
-        }
-    });
+/* --- AREA TOMBOL --- */
+.button-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    position: relative;
+    min-height: 100px;
+    margin: 0 auto;
+}
 
+.btn {
+    padding: 15px 45px;
+    font-size: 1.3rem;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    border: none;
+    border-radius: 50px;
+    outline: none;
+    text-decoration: none;
+    display: inline-block;
+    min-width: 120px;
+    /* AWALAN: state normal */
+    position: relative; 
+    transform: translate(0, 0);
+}
 
-    // --- 4. TOMBOL YES (SUDAH DI HTML berupa link ke IG) ---
-    // Tidak perlu JS extra, kecuali ingin tambahkan efek suara atau analytics
-    const yesBtnElement = document.getElementById('yes-btn');
-    
-    yesBtnElement.addEventListener('click', () => {
-        // Ini adalah fallback, sebenernya proses pengarahan ada di href HTML
-        console.log("Navigasi ke Instagram...");
-    });
+/* YES BUTTON */
+.yes-btn {
+    background-color: #000000;
+    color: white;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    z-index: 5;
+}
 
-});
+.yes-btn:hover {
+    transform: scale(1.1);
+    background-color: #333;
+}
+
+/* NO BUTTON */
+.no-btn {
+    background-color: white;
+    color: var(--text-dark);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    z-index: 4;
+}
+
+.no-btn:hover {
+    transform: scale(1.05);
+}
+
+/* --- BACKGROUND HEARTS --- */
+.bg-heart {
+    position: absolute;
+    bottom: -50px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 20px;
+    animation: floatUp linear forwards;
+    z-index: 1;
+}
+
+@keyframes floatUp {
+    0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+    20% { opacity: 0.8; }
+    100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 600px) {
+    .question-text { font-size: 2rem; }
+    .button-wrapper { flex-direction: column; gap: 20px; }
+}
