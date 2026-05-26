@@ -25,9 +25,8 @@
 
         <!-- Wadah Tombol -->
         <div class="button-wrapper" id="btn-wrapper">
-            <!-- Tombol YES (Langsung ke IG) -->
-            <!-- GANTI LINK DIBAWAH INI DENGAN USERNAME INSTAGRAM KAMU -->
-            <a href="https://instagram.com/justysf" target="_blank" class="btn yes-btn" id="yes-btn">YES ❤️</a>
+            <!-- Tombol YES (Buka Popup) -->
+            <button class="btn yes-btn" id="yes-btn">YES ❤️</button>
             
             <!-- Tombol NO (Kabur) -->
             <button class="btn no-btn" id="no-btn">NO</button>
@@ -35,7 +34,39 @@
 
     </main>
 
-    <!-- Elemen Latar Belakang Hati -->
+    <!-- POPUP KONFIRMASI -->
+    <div id="confirm-popup" class="popup-overlay">
+        <div class="popup-card">
+            <h2>🤔</h2>
+            <p class="confirm-text">Beneran yaaa kmu mauu?</p>
+            <p class="confirm-sub">Dm akuu plisss...</p>
+            
+            <!-- Tombol SERIUS -> ke IG -->
+            <!-- GANTI USERNAME DI BAWAH INI -->
+            <a href="https://instagram.com/justysf" target="_blank" class="btn serius-btn" id="serius-btn">
+                SERIUS ❤️
+            </a>
+            
+            <button class="btn cancel-btn" id="cancel-btn">Gabisa</button>
+        </div>
+    </div>
+
+    <!-- TOMBOL MUSIK (Pojok Kanan Bawah) -->
+    <div class="music-controls">
+        <button id="music-btn" class="music-btn">
+            <span id="music-icon">🔇</span>
+        </button>
+        <p class="music-label">Klik buat musik 🎵</p>
+    </div>
+
+    <!-- Elemen Audio (Hidden) -->
+    <!-- GANTI NAMA FILE DI BAWAH INI dengan nama file lagumu -->
+    <!-- Contoh: "you_lany.mp3" atau link online -->
+    <audio id="bg-music" loop>
+        <source src="LANY - you! (official video) - LANYVEVO.mp3" type="audio/mp3">
+    </audio>
+
+    <!-- Floating Hearts Background -->
     <div id="floating-hearts-bg"></div>
 
     <!-- Custom Cursor -->
