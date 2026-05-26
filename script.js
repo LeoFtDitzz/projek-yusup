@@ -1,30 +1,35 @@
 document.addEventListener('DOMContentLoaded', () => {
     
+    console.log("Script loaded!");
+    
     // --- 1. CUSTOM CURSOR ---
     const cursor = document.getElementById('cursor');
     
     document.addEventListener('mousemove', (e) => {
-        cursor.style.left = e.clientX + 'px';
-        cursor.style.top = e.clientY + 'px';
+        if(cursor) {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        }
     });
 
-    const buttons = document.querySelectorAll('.btn');
+    const buttons = document.querySelectorAll('.btn, .music-btn');
     buttons.forEach(btn => {
         btn.addEventListener('mouseenter', () => cursor.classList.add('gede'));
         btn.addEventListener('mouseleave', () => cursor.classList.remove('gede'));
     });
 
 
-    // --- 2. FLOATTING HEARTS (BACKGROUND) ---
+    // --- 2. FLOATING HEARTS (BACKGROUND) ---
     const bgContainer = document.getElementById('floating-hearts-bg');
     
     function createHeart() {
+        if (!bgContainer) return;
+        
         const heart = document.createElement('div');
         heart.classList.add('bg-heart');
         heart.innerHTML = '❤️';
         
         heart.style.left = Math.random() * 100 + 'vw';
-        
         const size = Math.random() * 20 + 10 + 'px';
         heart.style.fontSize = size;
         
@@ -33,9 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         bgContainer.appendChild(heart);
         
-        setTimeout(() => {
-            heart.remove();
-        }, 5000);
+        setTimeout(() => { heart.remove(); }, 5000);
     }
 
     setInterval(createHeart, 300);
@@ -43,54 +46,94 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 3. LOGIKA TOMBOL NO KABUR KETIKA DIKLIK ---
     const noBtn = document.getElementById('no-btn');
-    const wrapper = document.getElementById('btn-wrapper');
-
-    // Tentukan posisi-posisi TETAP yang aman (tidak keluar layar)
-    // Kita bagi area menjadi grid 3x3
-    const safePositions = [
-        { x: -120, y: 0 },   // Kiri
-        { x: 120, y: 0 },   // Kanan
-        { x: 0, y: -60 },   // Atas
-        { x: 0, y: 60 },   // Bawah
-        { x: -80, y: -50 }, // Kiri Atas
-        { x: 80, y: -50 },  // Kanan Atas
-        { x: -80, y: 50 },  // Kiri Bawah
-        { x: 80, y: 50 }    // Kanan Bawah
-    ];
     
-    let currentPositionIndex = -1;
+    if (noBtn) {
+        console.log("NO button found!");
+        
+        const moves = [
+            { x: -150, y: 0 },
+            { x: 150, y: 0 },
+            { x: 0, y: -100 },
+            { x: 0, y: 100 },
+            { x: -120, y: -80 },
+            { x: 120, y: -80 },
+            { x: -120, y: 80 },
+            { x: 120, y: 80 }
+        ];
 
-    function moveNoButton() {
-        // Pilih posisi acak tapi BERBEDA dari posisi sebelumnya
-        let newIndex;
-        do {
-            newIndex = Math.floor(Math.random() * safePositions.length);
-        } while (newIndex === currentPositionIndex);
-        
-        currentPositionIndex = newIndex;
-        const pos = safePositions[newIndex];
-        
-        // Terapkan perpindahan dengan animasi halus
-        noBtn.style.transition = 'transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
-        noBtn.style.transform = `translate(${pos.x}px, ${pos.y}px)`;
-        
-        // Ubah teks jadi lucu-lucu
-        const responses = ["mampos", "YAHAHAH", "raden", "ayotaaa", "Jangan", "pls"];
-        noBtn.innerText = responses[Math.floor(Math.random() * responses.length)];
-        
-        // Biar tetap terlihat, reset ke posisi tengah setelah 3 detik (opsional)
-        // setTimeout(() => {
-        //     noBtn.style.transform = `translate(0, 0)`;
-        //     noBtn.innerText = "NO";
-        // }, 2000);
+        let clickCount = 0;
+
+        noBtn.addEventListener('click', (e) => {
+            console.log("NO clicked!");
+            
+            clickCount++;
+            
+            const randomIndex = Math.floor(Math.random() * moves.length);
+            const move = moves[randomIndex];
+            
+            noBtn.style.transform = `translate(${move.x}px, ${move.y}px)`;
+            
+            const texts = ["Nice try 😂", "GK akan!", "Ketemu?", "Lari lagi!", "Jangan deh", "Yah..."];
+            noBtn.innerText = texts[clickCount % texts.length];
+            
+            setTimeout(() => {
+                noBtn.style.transform = `translate(0, 0)`;
+            }, 1500);
+        });
     }
 
-    // TOMBOL NO KABUR KETIKA DIKLIK
-    noBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        moveNoButton();
-    });
+
+    // --- 4. LOGIKA TOMBOL YES (BUKA POPUP) ---
+    const yesBtn = document.getElementById('yes-btn');
+    const confirmPopup = document.getElementById('confirm-popup');
+    const cancelBtn = document.getElementById('cancel-btn');
+    
+    if (yesBtn && confirmPopup) {
+        yesBtn.addEventListener('click', () => {
+            console.log("YES clicked! Show popup.");
+            confirmPopup.classList.add('active');
+        });
+        
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', () => {
+                confirmPopup.classList.remove('active');
+            });
+        }
+    }
 
 
-    // --- 4. TOMBOL YES (LINK KE IG) ---
+    // --- 5. MUSIK (PLAY/PAUSE) ---
+    const musicBtn = document.getElementById('music-btn');
+    const musicIcon = document.getElementById('music-icon');
+    const musicLabel = document.querySelector('.music-label');
+    const bgMusic = document.getElementById('bg-music');
+    
+    let isPlaying = false;
+
+    if (musicBtn && bgMusic) {
+        // Set volume (0.3 = 30% agar tidak terlalu keras)
+        bgMusic.volume = 0.3;
+        
+        musicBtn.addEventListener('click', () => {
+            if (isPlaying) {
+                // Pause musik
+                bgMusic.pause();
+                musicIcon.innerText = '🔇';
+                musicBtn.classList.remove('playing');
+                musicLabel.innerText = 'Klik buat musik 🎵';
+                isPlaying = false;
+            } else {
+                // Mainkan musik
+                bgMusic.play().then(() => {
+                    musicIcon.innerText = '🔊';
+                    musicBtn.classList.add('playing');
+                    musicLabel.innerText = 'Now Playing: You! 🎶';
+                    isPlaying = true;
+                }).catch(err => {
+                    console.log("Gagal mainkan musik:", err);
+                    alert("Klik tombol lagi untuk mulai musik!");
+                });
+            }
+        });
+    }
 });
