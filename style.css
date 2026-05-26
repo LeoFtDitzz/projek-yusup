@@ -33,7 +33,6 @@ body {
     pointer-events: none;
     z-index: 9999;
     transform: translate(-50%, -50%);
-    transition: width 0.2s, height 0.2s;
     mix-blend-mode: multiply;
 }
 
@@ -83,7 +82,7 @@ body:hover .custom-cursor.gede {
     font-weight: 300;
 }
 
-/* --- AREA TOMBOL --- */
+/* --- TOMBOL --- */
 .button-wrapper {
     display: flex;
     justify-content: center;
@@ -102,20 +101,19 @@ body:hover .custom-cursor.gede {
     border: none;
     border-radius: 50px;
     outline: none;
-    text-decoration: none;
     display: inline-block;
-    min-width: 120px;
-    /* AWALAN: state normal */
-    position: relative; 
+    position: relative;
     transform: translate(0, 0);
+    transition: all 0.3s ease;
+    text-decoration: none;
+    min-width: 120px;
 }
 
-/* YES BUTTON */
+/* YES */
 .yes-btn {
     background-color: #000000;
     color: white;
     box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-    transition: all 0.3s ease;
     z-index: 5;
 }
 
@@ -124,7 +122,7 @@ body:hover .custom-cursor.gede {
     background-color: #333;
 }
 
-/* NO BUTTON */
+/* NO */
 .no-btn {
     background-color: white;
     color: var(--text-dark);
@@ -135,6 +133,132 @@ body:hover .custom-cursor.gede {
 
 .no-btn:hover {
     transform: scale(1.05);
+}
+
+/* --- KONTROL MUSIK --- */
+.music-controls {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 50;
+    text-align: center;
+}
+
+.music-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: white;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.music-btn:hover {
+    transform: scale(1.1);
+    background: #f0f0f0;
+}
+
+.music-label {
+    font-size: 10px;
+    color: #888;
+    margin-top: 5px;
+}
+
+.music-btn.playing {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(255, 64, 129, 0.4); }
+    70% { box-shadow: 0 0 0 15px rgba(255, 64, 129, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 64, 129, 0); }
+}
+
+/* --- POPUP --- */
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.95);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.4s ease;
+}
+
+.popup-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.popup-card {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    text-align: center;
+    max-width: 350px;
+    transform: scale(0.8);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.popup-overlay.active .popup-card {
+    transform: scale(1);
+}
+
+.popup-card h2 {
+    font-size: 3rem;
+    margin-bottom: 10px;
+    animation: bounce 1s infinite;
+}
+
+.confirm-text {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--text-dark);
+    margin-bottom: 5px;
+}
+
+.confirm-sub {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.serius-btn {
+    background-color: #000000;
+    color: white;
+    display: block;
+    margin-bottom: 15px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+.serius-btn:hover {
+    transform: scale(1.05);
+    background-color: #333;
+}
+
+.cancel-btn {
+    background-color: transparent;
+    color: #999;
+    border: 2px solid #ddd;
+    font-size: 1rem;
+}
+
+.cancel-btn:hover {
+    background-color: #f5f5f5;
+    color: #666;
 }
 
 /* --- BACKGROUND HEARTS --- */
@@ -151,6 +275,11 @@ body:hover .custom-cursor.gede {
     0% { transform: translateY(0) rotate(0deg); opacity: 0; }
     20% { opacity: 0.8; }
     100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
 }
 
 /* --- RESPONSIVE --- */
